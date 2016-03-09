@@ -3,7 +3,7 @@ version:             0.1.0.0
 synopsis:            Initial project template from stack
 description:         Please see README.md
 homepage:            http://github.com/kulshrax/haskml#readme
-license:             BSD3
+license:             MIT
 license-file:        LICENSE
 author:              Arun Kulshreshtha
 maintainer:          kulshrax@gmail.com
@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
+  exposed-modules:     Html, ParseHtml
   build-depends:       base >= 4.7 && < 5
   default-language:    Haskell2010
 
