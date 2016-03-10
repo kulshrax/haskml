@@ -29,7 +29,7 @@ parseHtml = parse html "HaskML"
 
 
 html :: Parser Html
-html = Html <$> many (try element <|> try comment <|> try text)
+html = Html <$> many (try element <|> try void <|> try comment <|> try text)
 
 
 element :: Parser Node
@@ -37,9 +37,14 @@ element = do
     elem <- startTag
     content <- html
     end <- endTag
-    if end /= _tagName elem
-        then error "Tag name mismatch."
-        else return $ elem { _innerHtml = content }
+    if end /= tag elem
+        then fail "Tag name mismatch."
+        else return $ elem { content = InnerHtml content }
+
+void :: Parser Node
+void = do 
+    elem <- startTag
+    return $ elem { content = Void }
 
 
 text :: Parser Node
@@ -57,7 +62,7 @@ startTag = do
     attributes <- attrList
     spaces
     char '>'
-    return $ Element tag attributes mempty
+    return $ Element tag attributes $ InnerHtml mempty
 
 endTag :: Parser T.Text
 endTag = string "</" *> tagName <* char '>'

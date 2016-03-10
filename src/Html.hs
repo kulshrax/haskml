@@ -11,9 +11,13 @@ newtype Html = Html { getNodes :: [Node] } deriving Show
 
 type Attributes = M.Map T.Text T.Text
 
-data Node = Element { _tagName    :: T.Text
-                    , _attributes :: Attributes
-                    , _innerHtml  :: Html
+data Content = InnerHtml Html
+             | Void
+             deriving Show
+
+data Node = Element { tag    :: T.Text
+                    , attributes :: Attributes
+                    , content :: Content
                     }
           | Text T.Text
           | Comment T.Text
