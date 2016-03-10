@@ -21,5 +21,5 @@ data Node = Element { _tagName    :: T.Text
 
 
 instance Monoid Html where
-	mempty = Html []
-	mappend a b = Html $ getNodes a ++ getNodes b
+    mempty = Html []
+    mappend a b = Html $ getNodes a ++ getNodes b

@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, TupleSections #-}
+{-# LANGUAGE TupleSections #-}
 
 module ParseHtml (parseHtml, textToHtml) where
 
@@ -38,14 +38,14 @@ element = do
     content <- html
     end <- endTag
     if end /= _tagName elem
-        then fail "Tag name mismatch."
+        then error "Tag name mismatch."
         else return $ elem { _innerHtml = content }
 
 
 text :: Parser Node
 text = do
-    first <- anyChar
-    rest <- manyTill anyChar $ lookAhead (char '<')
+    first <- noneOf "<"
+    rest <- manyTill anyChar $ (lookAhead (char '<') *> return ()) <|> eof
     return . Text . T.pack $ first:rest
 
 
