@@ -25,7 +25,7 @@ textToHtml input =
 
 
 parseHtml :: T.Text -> Either ParseError Html
-parseHtml = parse html "HaskML" 
+parseHtml = parse (html <* eof) "HaskML" 
 
 
 html :: Parser Html
