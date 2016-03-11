@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, FlexibleInstances #-}
 
 module ParseHtml (parseHtml, textToHtml) where
 
@@ -29,7 +29,7 @@ parseHtml = parse (html <* eof) "HaskML"
 
 
 html :: Parser Html
-html = Html <$> many (try element <|> try void <|> try comment <|> try text)
+html = many (try element <|> try void <|> try comment <|> try text)
 
 
 element :: Parser Node
@@ -84,7 +84,7 @@ attrPair :: Parser (T.Text, T.Text)
 attrPair = (,) <$> attrName <* char '=' <*> attrValue
 
 attrName :: Parser T.Text
-attrName = T.toLower . T.pack <$> (many1 $ alphaNum <|> char '-')
+attrName = T.toLower . T.pack <$> many1 (alphaNum <|> char '-')
 
 attrValue :: Parser T.Text
 attrValue = try attrSingle <|> try attrDouble <|> attrUnquoted
@@ -96,11 +96,11 @@ attrDouble :: Parser T.Text
 attrDouble = T.pack <$> (char '"' *> manyTill anyChar (char '"'))
 
 attrUnquoted :: Parser T.Text
-attrUnquoted = T.pack <$> (manyTill anyChar $ lookAhead (space <|> char '>'))
+attrUnquoted = T.pack <$> manyTill anyChar (lookAhead (space <|> char '>'))
 
 
 comment :: Parser Node
 comment = Comment <$> (string "<!--" *> commentBody <* string "-->")
 
 commentBody :: Parser T.Text
-commentBody = T.pack <$> (manyTill anyChar $ lookAhead (string "-->"))
+commentBody = T.pack <$> manyTill anyChar (lookAhead (string "-->"))

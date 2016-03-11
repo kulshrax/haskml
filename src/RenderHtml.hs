@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, FlexibleInstances #-}
 
 module RenderHtml (render) where
 
@@ -19,11 +19,11 @@ render :: Html -> T.Text
 render = L.toStrict . B.toLazyText . renderHtml
 
 renderHtml :: Html -> B.Builder
-renderHtml = mconcat . fmap renderNode . getNodes
+renderHtml = mconcat . fmap renderNode
 
 renderNode :: Node -> B.Builder
 renderNode (Text t) = B.fromText t
-renderNode (Comment c ) = B.fromText "<!--" <> B.fromText c <> B.fromText "-->"
+renderNode (Comment c) = B.fromText "<!--" <> B.fromText c <> B.fromText "-->"
 renderNode elem = renderElem elem
 
 renderElem :: Node -> B.Builder
