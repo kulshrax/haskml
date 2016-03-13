@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, FlexibleInstances #-}
 
 module Combinator where
 
@@ -44,22 +44,27 @@ instance Monad HtmlM where
     (>>)     = append
 
 
-customElem :: TagName -> HtmlC -> HtmlC
+customElem :: TagName -> HtmlM a -> HtmlM b
 customElem t c = HtmlM . fromNode $ 
                     (emptyElem t) { content = InnerHtml . getHtml $ c }
 
-customVoid :: TagName -> HtmlC
-customVoid t = customElem t mempty
+customVoid :: TagName -> HtmlM a
+customVoid = HtmlM . fromNode . voidElem
 
 customAttr :: T.Text -> T.Text -> Attribute
 customAttr a = (a,)
 
-setAttr :: HtmlC -> Attribute -> HtmlC
+setAttr :: HtmlM a -> Attribute -> HtmlM b
 setAttr (HtmlM h) (k,v) = HtmlM . Html $ n':ns
                       where n'     = n { attributes = attr' }
                             attr'  = M.insert k v $ attributes n
                             (n:ns) = getNodes h
 
-(!) :: HtmlC -> Attribute -> HtmlC
-(!) = setAttr
-infixl 5 !
+class HasAttributes a where
+    (!) :: a -> Attribute -> a
+
+instance HasAttributes (HtmlM a) where
+    (!) = setAttr
+
+instance HasAttributes (HtmlM a -> HtmlM b) where
+    c ! a = flip setAttr a . c 
