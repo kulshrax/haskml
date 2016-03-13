@@ -3,19 +3,33 @@ module Html where
 import qualified Data.Text as T
 import qualified Data.Map as M
 
-type Html = [Node]
+newtype Html = Html { getNodes :: [Node] }
 
-type Attributes = M.Map T.Text T.Text
-
+type TagName = T.Text
 type Attribute = (T.Text, T.Text)
+type Attributes = M.Map T.Text T.Text
 
 data Content = InnerHtml Html
              | Void
 
-data Node = Element { tag    :: T.Text
+data Node = Element { tag    :: TagName
                     , attributes :: Attributes
                     , content :: Content
                     }
           | Text T.Text
           | Comment T.Text
 
+
+instance Monoid Html where
+    mempty = Html []
+    mappend a b = Html $ getNodes a ++ getNodes b
+
+
+fromNode :: Node -> Html
+fromNode = Html . return
+
+emptyElem :: TagName -> Node 
+emptyElem t = Element t M.empty (InnerHtml mempty)
+
+voidElem :: TagName -> Node
+voidElem t = Element t M.empty Void

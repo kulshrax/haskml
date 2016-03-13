@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module RenderHtml (render) where
 
@@ -14,12 +14,14 @@ import ParseHtml
 instance Show Html where
     show = T.unpack . render
 
+instance Show Node where
+    show = T.unpack . L.toStrict . B.toLazyText . renderNode
 
 render :: Html -> T.Text
 render = L.toStrict . B.toLazyText . renderHtml
 
 renderHtml :: Html -> B.Builder
-renderHtml = mconcat . fmap renderNode
+renderHtml = mconcat . fmap renderNode . getNodes
 
 renderNode :: Node -> B.Builder
 renderNode (Text t) = B.fromText t

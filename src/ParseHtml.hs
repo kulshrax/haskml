@@ -1,6 +1,6 @@
 {-# LANGUAGE TupleSections, FlexibleInstances #-}
 
-module ParseHtml (parseHtml, textToHtml) where
+module ParseHtml (parseHtml, toHtml) where
 
 import qualified Data.Text as T
 import qualified Data.Map as M
@@ -14,11 +14,11 @@ import Html
 
 
 instance IsString Html where
-    fromString = textToHtml . T.pack
+    fromString = toHtml . T.pack
 
 
-textToHtml :: T.Text -> Html
-textToHtml input = 
+toHtml :: T.Text -> Html
+toHtml input = 
     case parseHtml input of
         Left e -> error . show $ e
         Right h -> h
@@ -29,7 +29,7 @@ parseHtml = parse (html <* eof) "HaskML"
 
 
 html :: Parser Html
-html = many (try element <|> try void <|> try comment <|> try text)
+html = Html <$> many (try element <|> try void <|> try comment <|> try text)
 
 
 element :: Parser Node
