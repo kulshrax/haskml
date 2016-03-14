@@ -18,14 +18,13 @@ newtype HtmlM a = HtmlM { getHtml :: Html }
 type HtmlParent = forall a b. HtmlM a -> HtmlM b
 type HtmlLeaf = forall a. HtmlM a
 
-append :: HtmlM a -> HtmlM b -> HtmlM c
-append (HtmlM x) (HtmlM y) = HtmlM $ x <> y
 
 instance IsString (HtmlM a) where
     fromString = HtmlM . fromString
 
 instance Show (HtmlM a) where
     show = show . getHtml
+
 
 instance Monoid (HtmlM a) where
     mempty = HtmlM mempty
@@ -44,9 +43,22 @@ instance Monad HtmlM where
     (>>) = append
 
 
+class HasAttributes a where
+    (!) :: a -> Attribute -> a
+
+instance HasAttributes (HtmlM a) where
+    (!) = setAttr
+
+instance HasAttributes (HtmlM a -> HtmlM b) where
+    c ! a = flip setAttr a . c 
+
+
+append :: HtmlM a -> HtmlM b -> HtmlM c
+append (HtmlM x) (HtmlM y) = HtmlM $ x <> y
+
 newElem :: TagName -> HtmlParent
 newElem t c = HtmlM . fromNode $ 
-                    (emptyElem t) { content = InnerHtml . getHtml $ c }
+    (emptyElem t) { content = InnerHtml . getHtml $ c }
 
 newVoid :: TagName -> HtmlLeaf
 newVoid = HtmlM . fromNode . voidElem
@@ -56,15 +68,6 @@ newAttr a = (a,)
 
 setAttr :: HtmlM a -> Attribute -> HtmlM b
 setAttr (HtmlM h) (k,v) = HtmlM . Html $ n':ns
-                      where n'     = n { attributes = attr' }
-                            attr'  = M.insert k v $ attributes n
-                            (n:ns) = getNodes h
-
-class HasAttributes a where
-    (!) :: a -> Attribute -> a
-
-instance HasAttributes (HtmlM a) where
-    (!) = setAttr
-
-instance HasAttributes (HtmlM a -> HtmlM b) where
-    c ! a = flip setAttr a . c 
+    where n'     = n { attributes = attr' }
+          attr'  = M.insert k v $ attributes n
+          (n:ns) = getNodes h

@@ -3,15 +3,14 @@ module Html where
 import qualified Data.Text as T
 import qualified Data.Map as M
 
+
 newtype Html = Html { getNodes :: [Node] }
 
 type TagName = T.Text
 type Attribute = (T.Text, T.Text)
 type Attributes = M.Map T.Text T.Text
 
-data Content = InnerHtml Html
-             | Void
-
+data Content = Void | InnerHtml Html
 data Node = Element { tag    :: TagName
                     , attributes :: Attributes
                     , content :: Content
