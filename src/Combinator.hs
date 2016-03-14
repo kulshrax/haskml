@@ -1,8 +1,10 @@
-{-# LANGUAGE TupleSections, FlexibleInstances #-}
+{-# LANGUAGE TupleSections, FlexibleInstances, RankNTypes #-}
 
 module Combinator where
 
-import Prelude hiding (span)
+import ParseHtml
+import RenderHtml
+import Html
 
 import qualified Data.Text as T
 import qualified Data.Map as M
@@ -10,13 +12,11 @@ import Data.Monoid
 import Data.String
 import Unsafe.Coerce
 
-import ParseHtml
-import RenderHtml
-import Html
-
 
 newtype HtmlM a = HtmlM { getHtml :: Html }
-type HtmlC = HtmlM ()
+
+type HtmlParent = forall a b. HtmlM a -> HtmlM b
+type HtmlLeaf = forall a. HtmlM a
 
 append :: HtmlM a -> HtmlM b -> HtmlM c
 append (HtmlM x) (HtmlM y) = HtmlM $ x <> y
@@ -28,31 +28,31 @@ instance Show (HtmlM a) where
     show = show . getHtml
 
 instance Monoid (HtmlM a) where
-    mempty  = HtmlM mempty
+    mempty = HtmlM mempty
     mappend = append
 
 instance Functor HtmlM where
     fmap _ = unsafeCoerce  
 
 instance Applicative HtmlM where
-    pure  = const mempty
+    pure = const mempty
     (<*>) = append
 
 instance Monad HtmlM where
     return = pure
-    m >>= f  = m >> f undefined
-    (>>)     = append
+    m >>= f = m >> f undefined
+    (>>) = append
 
 
-customElem :: TagName -> HtmlM a -> HtmlM b
-customElem t c = HtmlM . fromNode $ 
+newElem :: TagName -> HtmlParent
+newElem t c = HtmlM . fromNode $ 
                     (emptyElem t) { content = InnerHtml . getHtml $ c }
 
-customVoid :: TagName -> HtmlM a
-customVoid = HtmlM . fromNode . voidElem
+newVoid :: TagName -> HtmlLeaf
+newVoid = HtmlM . fromNode . voidElem
 
-customAttr :: T.Text -> T.Text -> Attribute
-customAttr a = (a,)
+newAttr :: T.Text -> T.Text -> Attribute
+newAttr a = (a,)
 
 setAttr :: HtmlM a -> Attribute -> HtmlM b
 setAttr (HtmlM h) (k,v) = HtmlM . Html $ n':ns
