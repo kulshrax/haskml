@@ -25,6 +25,9 @@ instance IsString (HtmlM a) where
 instance Show (HtmlM a) where
     show = show . getHtml
 
+instance IsString (HtmlM a -> HtmlM b) where
+    fromString = insert . HtmlM . fromString
+
 
 instance Monoid (HtmlM a) where
     mempty = HtmlM mempty
@@ -55,6 +58,10 @@ instance HasAttributes (HtmlM a -> HtmlM b) where
 
 append :: HtmlM a -> HtmlM b -> HtmlM c
 append (HtmlM x) (HtmlM y) = HtmlM $ x <> y
+
+insert :: HtmlM a -> HtmlM b -> HtmlM c
+insert (HtmlM (Html (x:xs))) (HtmlM y) = HtmlM . Html $
+    x { content = InnerHtml y} : xs
 
 newElem :: TagName -> HtmlParent
 newElem t c = HtmlM . fromNode $ 

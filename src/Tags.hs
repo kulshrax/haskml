@@ -1,18 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 
--- | This module exposes combinators for all of the basic HTML elements
--- as listed here: https://www.w3.org/TR/html-markup/elements-by-function.html
 module Tags where
 
 import Combinator
 
--- Hide the Prelude because several tag names conflict with
+-- | Hide the Prelude because several tag names conflict with
 -- Prelude functions. In practice, this module should be
 -- imported qualified to prevent name collisions.
 import Prelude ()
 
 
--- Void elements. These can't contain child elements and thus
+-- | Void elements. These can't contain child elements and thus
 -- do not take any arguments. List of void elements taken from here:
 -- https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
 
@@ -60,8 +58,11 @@ wbr = newVoid "wbr"
 
 
 
--- Parent elements. Takes an HtmlM and embeds it as the inner HTML of 
--- the given element, making it easy to nest elements.
+-- | Parent elements. Takes an HtmlM and embeds it as the inner HTML of 
+-- the given element, making it easy to nest elements. Combinators are
+-- included for all elements listed here:
+-- https://www.w3.org/TR/html-markup/elements-by-function.html
+-- (With the exception of the void elements, which are defined above.)
 
 html :: HtmlParent
 html = newElem "html"
