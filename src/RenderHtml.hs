@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module RenderHtml (render, renderPage) where
+module RenderHtml 
+  ( render
+  , renderPage
+  ) where
 
 import Html
 import ParseHtml
@@ -37,7 +40,7 @@ renderHtml :: Html -> B.Builder
 renderHtml = mconcat . fmap renderNode . getNodes
 
 renderNode :: Node -> B.Builder
-renderNode (Text t) = B.fromText t
+renderNode (Text t) = B.fromText $ htmlSpecialChars t
 renderNode (Comment c) = B.fromText "<!--" <> B.fromText c <> B.fromText "-->"
 renderNode elem = renderElem elem
 
@@ -59,7 +62,8 @@ renderAttrList = M.foldrWithKey renderAttr mempty
 renderAttr :: T.Text -> T.Text -> B.Builder -> B.Builder
 renderAttr k "" acc = acc <> B.singleton ' ' <> B.fromText k
 renderAttr k v  acc = acc <> B.singleton ' ' <> B.fromText k
-                          <> B.fromText "=\"" <> B.fromText v 
+                          <> B.fromText "=\"" 
+                          <> B.fromText (htmlSpecialChars v)
                           <> B.singleton '"'
 
 renderEndTag :: T.Text -> B.Builder
@@ -67,3 +71,6 @@ renderEndTag t = B.fromText "</" <> B.fromText t <> B.singleton '>'
 
 renderDoctype :: B.Builder
 renderDoctype = B.fromText "<!DOCTYPE html>"
+
+
+

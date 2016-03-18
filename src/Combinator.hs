@@ -10,6 +10,7 @@ module Combinator
     , newElem
     , newVoid
     , newAttr
+    , text
     ) where
 
 import ParseHtml
@@ -22,6 +23,17 @@ import Data.Monoid
 import Data.String
 import Unsafe.Coerce
 
+
+-- | Monadic wrapper for Html objects, allowing the use of do notation
+-- to concatenate them. In order to be a monad, this type has kind * -> *,
+-- but the extra type parameter doesn't actually do anything. 
+-- 
+-- This type is mostly an abuse of the type system in order to get nice
+-- syntactic sugar. It does not obey the monad laws, for example, and
+-- should not be treated like a proper monad for most purposes.
+--
+-- This syntax hack was heavily inspired by BlazeHTML, which does something
+-- very similar to a clean-looking API.
 
 newtype HtmlM a = HtmlM { getHtml :: Html } deriving (Eq)
 
@@ -47,6 +59,14 @@ instance Monoid (HtmlM a) where
     mempty = HtmlM mempty
     mappend = append
 
+
+-- | An abuse of the type system. We need an instance of Function in order
+-- to have an instance of Monad. We can implement fmap using unsafeCoerce 
+-- since the HtmlM object doesn't actually contain anything, and the type
+-- parameter is essentially meaningless anyway.
+--
+-- This was originally implemented as undefined, but unsafeCoerce will at 
+-- least not crash the program if an fmap happens.
 instance Functor HtmlM where
     fmap _ = unsafeCoerce  
 
@@ -54,6 +74,11 @@ instance Applicative HtmlM where
     pure = const mempty
     (<*>) = append
 
+-- Again, abuse of the type system. Note that monadic binds only work
+-- if the function passed to >>= does not attempt to evaulate its argument.
+-- Doing that (or the corresponding <- notation in a do block) will result
+-- in a runtime error. This behavior is similar to what BlazeHTML does in 
+-- practice.
 instance Monad HtmlM where
     return = pure
     m >>= f = m >> f (error "HaskML: Unsupported use of bind.")
@@ -66,7 +91,7 @@ instance Monad HtmlM where
 
 class HasAttributes a where
     (!) :: a -> Attribute -> a
-infixl 5 !
+--infixl 5 !
 
 instance HasAttributes (HtmlM a) where
     (!) = setAttr
@@ -118,3 +143,6 @@ setAttr (HtmlM h) (k,v) = HtmlM . Html $ n':ns
     where n'     = n { attributes = attr' }
           attr'  = M.insert k v $ attributes n
           (n:ns) = getNodes h
+
+text :: T.Text -> HtmlM a
+text = HtmlM . textToHtml

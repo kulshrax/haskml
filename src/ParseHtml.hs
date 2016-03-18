@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings, TupleSections #-}
 
-module ParseHtml (parseHtml, textToHtml) where
+module ParseHtml 
+    ( parseHtml
+    , textToHtml
+    ) where
 
 import Html
 

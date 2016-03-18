@@ -16,11 +16,11 @@ import Data.Monoid
 
 template = H.html $ do
     H.head $ do
-        H.meta ! charset "utf-8"
+        H.meta ! A.charset "utf-8"
         H.title $ "'s Page"
     H.body $ do
-        "Hello, "
-
+        "<a href=\"foo\">Test</a>" ! A.href "bar" $ do
+            text "foobar"
 
 
 main :: IO ()
