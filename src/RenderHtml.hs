@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module RenderHtml (render) where
+module RenderHtml (render, renderPage) where
+
+import Html
+import ParseHtml
 
 import qualified Data.Text as T
 import qualified Data.Map as M
@@ -8,8 +11,9 @@ import qualified Data.Text.Lazy as L
 import qualified Data.Text.Lazy.Builder as B
 import Data.Monoid
 
-import Html
-import ParseHtml
+
+-- | Define Show instances for Html and Node objects so that they appear
+-- as valid HTML strings in the terminal.
 
 instance Show Html where
     show = T.unpack . render
@@ -17,8 +21,17 @@ instance Show Html where
 instance Show Node where
     show = T.unpack . L.toStrict . B.toLazyText . renderNode
 
+
+-- | Simple HTML renderer that converts an Html tree into a Text
+-- object to be output.
 render :: Html -> T.Text
 render = L.toStrict . B.toLazyText . renderHtml
+
+-- | Render an Html tree and prepend a Document Type Declaration to it.
+-- Useful for rendering the final page output if the root node is an <html>
+-- element.
+renderPage :: Html -> T.Text
+renderPage = L.toStrict . B.toLazyText . (renderDoctype <>) . renderHtml
 
 renderHtml :: Html -> B.Builder
 renderHtml = mconcat . fmap renderNode . getNodes
@@ -51,3 +64,6 @@ renderAttr k v  acc = acc <> B.singleton ' ' <> B.fromText k
 
 renderEndTag :: T.Text -> B.Builder
 renderEndTag t = B.fromText "</" <> B.fromText t <> B.singleton '>'
+
+renderDoctype :: B.Builder
+renderDoctype = B.fromText "<!DOCTYPE html>"

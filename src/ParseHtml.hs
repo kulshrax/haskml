@@ -1,24 +1,22 @@
-{-# LANGUAGE TupleSections, FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings, TupleSections #-}
 
-module ParseHtml (parseHtml, toHtml) where
-
-import qualified Data.Text as T
-import qualified Data.Map as M
-
-import Data.String
-
-import Text.Parsec
-import Text.Parsec.Text
+module ParseHtml (parseHtml, textToHtml) where
 
 import Html
 
+import qualified Data.Text as T
+import qualified Data.Map as M
+import Data.String
+import Text.Parsec
+import Text.Parsec.Text
+
 
 instance IsString Html where
-    fromString = toHtml . T.pack
+    fromString = textToHtml . T.pack
 
 
-toHtml :: T.Text -> Html
-toHtml input = 
+textToHtml :: T.Text -> Html
+textToHtml input = 
     case parseHtml input of
         Left e -> error . show $ e
         Right h -> h

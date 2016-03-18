@@ -1,6 +1,16 @@
 {-# LANGUAGE TupleSections, FlexibleInstances, RankNTypes #-}
 
-module Combinator where
+module Combinator
+    ( HtmlM (..)
+    , HtmlParent
+    , HtmlLeaf
+    , HasAttributes
+    , (!)
+    , toHtml
+    , newElem
+    , newVoid
+    , newAttr
+    ) where
 
 import ParseHtml
 import RenderHtml
@@ -13,7 +23,7 @@ import Data.String
 import Unsafe.Coerce
 
 
-newtype HtmlM a = HtmlM { getHtml :: Html }
+newtype HtmlM a = HtmlM { getHtml :: Html } deriving (Eq)
 
 type HtmlParent = forall a b. HtmlM a -> HtmlM b
 type HtmlLeaf = forall a. HtmlM a
@@ -25,8 +35,12 @@ instance IsString (HtmlM a) where
 instance Show (HtmlM a) where
     show = show . getHtml
 
+
 instance IsString (HtmlM a -> HtmlM b) where
     fromString = insert . HtmlM . fromString
+
+instance Show (HtmlM a -> HtmlM b) where
+    show = show . getHtml . ($ mempty)
 
 
 instance Monoid (HtmlM a) where
@@ -42,12 +56,17 @@ instance Applicative HtmlM where
 
 instance Monad HtmlM where
     return = pure
-    m >>= f = m >> f undefined
+    m >>= f = m >> f (error "HaskML: Unsupported use of bind.")
     (>>) = append
 
 
+-- | Define an operator for adding attributes to our combinators.
+-- This needs to be a typeclass so that it can work with both parent
+-- combiantors as well as leaf combinators.
+
 class HasAttributes a where
     (!) :: a -> Attribute -> a
+infixl 5 !
 
 instance HasAttributes (HtmlM a) where
     (!) = setAttr
@@ -56,12 +75,33 @@ instance HasAttributes (HtmlM a -> HtmlM b) where
     c ! a = flip setAttr a . c 
 
 
+-- | Typeclass allowing easy conversion of the various combinator types
+-- to the basic Html type. Useful for rendering HTML output once one
+-- has constructed an HTML template with the combinators.
+
+class ToHtml a where
+    toHtml :: a -> Html
+
+instance ToHtml Html where
+    toHtml = id
+
+instance ToHtml (HtmlM a) where
+    toHtml = getHtml
+
+instance ToHtml (HtmlM a -> HtmlM b) where
+    toHtml f = getHtml $ f mempty
+
+
+-- | Various utility functions for working with HtmlM combinators. 
+-- End users should not ordinarily need to use these, but they are used
+-- in other parts of the library to 
+
 append :: HtmlM a -> HtmlM b -> HtmlM c
 append (HtmlM x) (HtmlM y) = HtmlM $ x <> y
 
 insert :: HtmlM a -> HtmlM b -> HtmlM c
-insert (HtmlM (Html (x:xs))) (HtmlM y) = HtmlM . Html $
-    x { content = InnerHtml y} : xs
+insert (HtmlM (Html (x@(Element _ _ (InnerHtml c)) : xs))) (HtmlM y) =
+    HtmlM . Html $ x { content = InnerHtml $ c <> y } : xs
 
 newElem :: TagName -> HtmlParent
 newElem t c = HtmlM . fromNode $ 

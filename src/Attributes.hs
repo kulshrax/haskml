@@ -1,8 +1,9 @@
-{-# LANGUAGE OverloadedStrings, TupleSections #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Attributes where
 
 import Html
+import Combinator
 
 import qualified Data.Text as T
 import Prelude ()
@@ -11,335 +12,336 @@ import Prelude ()
 -- https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
 
 accept :: T.Text -> Attribute
-accept = ("accept",)
+accept = newAttr "accept"
 
 accept_charset :: T.Text -> Attribute
-accept_charset = ("accept-charset",)
+accept_charset = newAttr "accept-charset"
 
 accesskey :: T.Text -> Attribute
-accesskey = ("accesskey",)
+accesskey = newAttr "accesskey"
 
 action :: T.Text -> Attribute
-action = ("action",)
+action = newAttr "action"
 
 align :: T.Text -> Attribute
-align = ("align",)
+align = newAttr "align"
 
 alt :: T.Text -> Attribute
-alt = ("alt",)
+alt = newAttr "alt"
 
 async :: T.Text -> Attribute
-async = ("async",)
+async = newAttr "async"
 
 autocomplete :: T.Text -> Attribute
-autocomplete = ("autocomplete",)
+autocomplete = newAttr "autocomplete"
 
 autofocus :: T.Text -> Attribute
-autofocus = ("autofocus",)
+autofocus = newAttr "autofocus"
 
 autoplay :: T.Text -> Attribute
-autoplay = ("autoplay",)
+autoplay = newAttr "autoplay"
 
 autosave :: T.Text -> Attribute
-autosave = ("autosave",)
+autosave = newAttr "autosave"
 
 bgcolor :: T.Text -> Attribute
-bgcolor = ("bgcolor",)
+bgcolor = newAttr "bgcolor"
 
 border :: T.Text -> Attribute
-border = ("border",)
+border = newAttr "border"
 
 buffered :: T.Text -> Attribute
-buffered = ("buffered",)
+buffered = newAttr "buffered"
 
 challenge :: T.Text -> Attribute
-challenge = ("challenge",)
+challenge = newAttr "challenge"
 
 charset :: T.Text -> Attribute
-charset = ("charset",)
+charset = newAttr "charset"
 
 checkedcite :: T.Text -> Attribute
-checkedcite = ("checkedcite",)
+checkedcite = newAttr "checkedcite"
 
 class_ :: T.Text -> Attribute
-class_ = ("class",)
+class_ = newAttr "class"
 
 code :: T.Text -> Attribute
-code = ("code",)
+code = newAttr "code"
 
 codebase :: T.Text -> Attribute
-codebase = ("codebase",)
+codebase = newAttr "codebase"
 
 color :: T.Text -> Attribute
-color = ("color",)
+color = newAttr "color"
 
 cols :: T.Text -> Attribute
-cols = ("cols",)
+cols = newAttr "cols"
 
 colspan :: T.Text -> Attribute
-colspan = ("colspan",)
+colspan = newAttr "colspan"
 
 content :: T.Text -> Attribute
-content = ("content",)
+content = newAttr "content"
 
 contenteditable :: T.Text -> Attribute
-contenteditable = ("contenteditable",)
+contenteditable = newAttr "contenteditable"
 
 contextmenu :: T.Text -> Attribute
-contextmenu = ("contextmenu",)
+contextmenu = newAttr "contextmenu"
 
 controls :: T.Text -> Attribute
-controls = ("controls",)
+controls = newAttr "controls"
 
 coords :: T.Text -> Attribute
-coords = ("coords",)
+coords = newAttr "coords"
 
 data_ :: T.Text -> Attribute
-data_ = ("data",)
+data_ = newAttr "data"
 
 datetime :: T.Text -> Attribute
-datetime = ("datetime",)
+datetime = newAttr "datetime"
 
 default_ :: T.Text -> Attribute
-default_ = ("default",)
+default_ = newAttr "default"
 
 defer :: T.Text -> Attribute
-defer = ("defer",)
+defer = newAttr "defer"
 
 dir :: T.Text -> Attribute
-dir = ("dir",)
+dir = newAttr "dir"
 
 dirname :: T.Text -> Attribute
-dirname = ("dirname",)
+dirname = newAttr "dirname"
 
 disabled :: T.Text -> Attribute
-disabled = ("disabled",)
+disabled = newAttr "disabled"
 
 download :: T.Text -> Attribute
-download = ("download",)
+download = newAttr "download"
 
 draggable :: T.Text -> Attribute
-draggable = ("draggable",)
+draggable = newAttr "draggable"
 
 dropzone :: T.Text -> Attribute
-dropzone = ("dropzone",)
+dropzone = newAttr "dropzone"
 
 enctype :: T.Text -> Attribute
-enctype = ("enctype",)
+enctype = newAttr "enctype"
 
 for :: T.Text -> Attribute
-for = ("for",)
+for = newAttr "for"
 
 form :: T.Text -> Attribute
-form = ("form",)
+form = newAttr "form"
 
 formaction :: T.Text -> Attribute
-formaction = ("formaction",)
+formaction = newAttr "formaction"
 
 headers :: T.Text -> Attribute
-headers = ("headers",)
+headers = newAttr "headers"
 
 height :: T.Text -> Attribute
-height = ("height",)
+height = newAttr "height"
 
 hidden :: T.Text -> Attribute
-hidden = ("hidden",)
+hidden = newAttr "hidden"
 
 high :: T.Text -> Attribute
-high = ("high",)
+high = newAttr "high"
 
 href :: T.Text -> Attribute
-href = ("href",)
+href = newAttr "href"
 
 hreflang :: T.Text -> Attribute
-hreflang = ("hreflang",)
+hreflang = newAttr "hreflang"
 
 http_equiv :: T.Text -> Attribute
-http_equiv = ("http-equiv",)
+http_equiv = newAttr "http-equiv"
 
 icon :: T.Text -> Attribute
-icon = ("icon",)
+icon = newAttr "icon"
 
 id :: T.Text -> Attribute
-id = ("id",)
+id = newAttr "id"
 
 ismap :: T.Text -> Attribute
-ismap = ("ismap",)
+ismap = newAttr "ismap"
 
 itemprop :: T.Text -> Attribute
-itemprop = ("itemprop",)
+itemprop = newAttr "itemprop"
 
 keytype :: T.Text -> Attribute
-keytype = ("keytype",)
+keytype = newAttr "keytype"
 
 kind :: T.Text -> Attribute
-kind = ("kind",)
+kind = newAttr "kind"
 
 label :: T.Text -> Attribute
-label = ("label",)
+label = newAttr "label"
 
 lang :: T.Text -> Attribute
-lang = ("lang",)
+lang = newAttr "lang"
 
 language :: T.Text -> Attribute
-language = ("language",)
+language = newAttr "language"
 
 list :: T.Text -> Attribute
-list = ("list",)
+list = newAttr "list"
 
 loop :: T.Text -> Attribute
-loop = ("loop",)
+loop = newAttr "loop"
 
 low :: T.Text -> Attribute
-low = ("low",)
+low = newAttr "low"
 
 manifest :: T.Text -> Attribute
-manifest = ("manifest",)
+manifest = newAttr "manifest"
 
 max :: T.Text -> Attribute
-max = ("max",)
+max = newAttr "max"
 
 maxlength :: T.Text -> Attribute
-maxlength = ("maxlength",)
+maxlength = newAttr "maxlength"
 
 media :: T.Text -> Attribute
-media = ("media",)
+media = newAttr "media"
 
 method :: T.Text -> Attribute
-method = ("method",)
+method = newAttr "method"
 
 min :: T.Text -> Attribute
-min = ("min",)
+min = newAttr "min"
 
 multiple :: T.Text -> Attribute
-multiple = ("multiple",)
+multiple = newAttr "multiple"
 
 muted :: T.Text -> Attribute
-muted = ("muted",)
+muted = newAttr "muted"
 
 name :: T.Text -> Attribute
-name = ("name",)
+name = newAttr "name"
 
 novalidate :: T.Text -> Attribute
-novalidate = ("novalidate",)
+novalidate = newAttr "novalidate"
 
 open :: T.Text -> Attribute
-open = ("open",)
+open = newAttr "open"
 
 optimum :: T.Text -> Attribute
-optimum = ("optimum",)
+optimum = newAttr "optimum"
 
 pattern :: T.Text -> Attribute
-pattern = ("pattern",)
+pattern = newAttr "pattern"
 
 ping :: T.Text -> Attribute
-ping = ("ping",)
+ping = newAttr "ping"
 
 placeholder :: T.Text -> Attribute
-placeholder = ("placeholder",)
+placeholder = newAttr "placeholder"
 
 poster :: T.Text -> Attribute
-poster = ("poster",)
+poster = newAttr "poster"
 
 preload :: T.Text -> Attribute
-preload = ("preload",)
+preload = newAttr "preload"
 
 radiogroup :: T.Text -> Attribute
-radiogroup = ("radiogroup",)
+radiogroup = newAttr "radiogroup"
 
 readonly :: T.Text -> Attribute
-readonly = ("readonly",)
+readonly = newAttr "readonly"
 
 rel :: T.Text -> Attribute
-rel = ("rel",)
+rel = newAttr "rel"
 
 required :: T.Text -> Attribute
-required = ("required",)
+required = newAttr "required"
 
 reversed :: T.Text -> Attribute
-reversed = ("reversed",)
+reversed = newAttr "reversed"
 
 rows :: T.Text -> Attribute
-rows = ("rows",)
+rows = newAttr "rows"
 
 rowspan :: T.Text -> Attribute
-rowspan = ("rowspan",)
+rowspan = newAttr "rowspan"
 
 sandbox :: T.Text -> Attribute
-sandbox = ("sandbox",)
+sandbox = newAttr "sandbox"
 
 scope :: T.Text -> Attribute
-scope = ("scope",)
+scope = newAttr "scope"
 
 scoped :: T.Text -> Attribute
-scoped = ("scoped",)
+scoped = newAttr "scoped"
 
 seamless :: T.Text -> Attribute
-seamless = ("seamless",)
+seamless = newAttr "seamless"
 
 selected :: T.Text -> Attribute
-selected = ("selected",)
+selected = newAttr "selected"
 
 shape :: T.Text -> Attribute
-shape = ("shape",)
+shape = newAttr "shape"
 
 size :: T.Text -> Attribute
-size = ("size",)
+size = newAttr "size"
 
 sizes :: T.Text -> Attribute
-sizes = ("sizes",)
+sizes = newAttr "sizes"
 
 span :: T.Text -> Attribute
-span = ("span",)
+span = newAttr "span"
 
 spellcheck :: T.Text -> Attribute
-spellcheck = ("spellcheck",)
+spellcheck = newAttr "spellcheck"
 
 src :: T.Text -> Attribute
-src = ("src",)
+src = newAttr "src"
 
 srcdoc :: T.Text -> Attribute
-srcdoc = ("srcdoc",)
+srcdoc = newAttr "srcdoc"
 
 srclang :: T.Text -> Attribute
-srclang = ("srclang",)
+srclang = newAttr "srclang"
 
 srcset :: T.Text -> Attribute
-srcset = ("srcset",)
+srcset = newAttr "srcset"
 
 start :: T.Text -> Attribute
-start = ("start",)
+start = newAttr "start"
 
 step :: T.Text -> Attribute
-step = ("step",)
+step = newAttr "step"
 
 style :: T.Text -> Attribute
-style = ("style",)
+style = newAttr "style"
 
 summary :: T.Text -> Attribute
-summary = ("summary",)
+summary = newAttr "summary"
 
 tabindex :: T.Text -> Attribute
-tabindex = ("tabindex",)
+tabindex = newAttr "tabindex"
 
 target :: T.Text -> Attribute
-target = ("target",)
+target = newAttr "target"
 
 title :: T.Text -> Attribute
-title = ("title",)
+title = newAttr "title"
 
 type_ :: T.Text -> Attribute
-type_ = ("type",)
+type_ = newAttr "type"
 
 usemap :: T.Text -> Attribute
-usemap = ("usemap",)
+usemap = newAttr "usemap"
 
 value :: T.Text -> Attribute
-value = ("value",)
+value = newAttr "value"
 
 width :: T.Text -> Attribute
-width = ("width",)
+width = newAttr "width"
 
 wrap :: T.Text -> Attribute
-wrap = ("wrap",)
+wrap = newAttr "wrap"
+
 

@@ -57,7 +57,6 @@ wbr :: HtmlLeaf
 wbr = newVoid "wbr"
 
 
-
 -- | Parent elements. Takes an HtmlM and embeds it as the inner HTML of 
 -- the given element, making it easy to nest elements. Combinators are
 -- included for all elements listed here:

@@ -4,5 +4,6 @@ import Html
 import RenderHtml
 import ParseHtml
 import Combinator
-import Tags
-import Attributes
+import Selectors
+import qualified Tags as T
+import qualified Attributes as A
