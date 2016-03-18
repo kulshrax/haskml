@@ -135,6 +135,9 @@ pre = newElem "pre"
 blockquote :: HtmlParent
 blockquote = newElem "blockquote"
 
+ul :: HtmlParent
+ul = newElem "ul"
+
 ol :: HtmlParent
 ol = newElem "ol"
 

@@ -2,6 +2,11 @@
 
 module Selectors where
 
+-- This module is currently incomplete. The intention was to create a module
+-- for traversing HTML DOM trees and querying them using CSS-like syntax.
+-- So far, there are some basic zippers for traversing Html structures,
+-- but the CSS selectors are not yet implemeneted.
+
 import Html
 import Combinator
 
@@ -73,9 +78,6 @@ prev (HZ n ((HH p bs as):hs)) = Just $
 next :: HtmlZipper -> Maybe HtmlZipper
 next (HZ _ ((HH _ _ []):_)) = Nothing
 next (HZ n ((HH p b (a:as)):hs)) = Just $ HZ a ((HH p (b ++ [n]) as):hs)
-
-
-
 
 
 select :: Selector -> Html -> HtmlZipper
