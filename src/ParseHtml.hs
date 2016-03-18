@@ -14,6 +14,8 @@ import Text.Parsec
 import Text.Parsec.Text
 
 
+-- | Define IsString instance for Html, so that string literals containing
+-- markup can be directly used wherever an Html object is expected.
 instance IsString Html where
     fromString = textToHtml . T.pack
 

@@ -91,7 +91,6 @@ instance Monad HtmlM where
 
 class HasAttributes a where
     (!) :: a -> Attribute -> a
---infixl 5 !
 
 instance HasAttributes (HtmlM a) where
     (!) = setAttr

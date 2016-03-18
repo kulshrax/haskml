@@ -3,6 +3,7 @@
 module RenderHtml 
   ( render
   , renderPage
+  , htmlSpecialChars
   ) where
 
 import Html
@@ -17,7 +18,6 @@ import Data.Monoid
 
 -- | Define Show instances for Html and Node objects so that they appear
 -- as valid HTML strings in the terminal.
-
 instance Show Html where
     show = T.unpack . render
 
@@ -73,4 +73,13 @@ renderDoctype :: B.Builder
 renderDoctype = B.fromText "<!DOCTYPE html>"
 
 
+-- | Escape special characters from a Text string that have special
+-- significance in HTML. Behaves similar to the htmlspecialchars()
+-- function in PHP. Exported so it is broadly available where needed.
+htmlSpecialChars :: T.Text -> T.Text
+htmlSpecialChars = T.replace "<"  "&lt;"
+                 . T.replace ">"  "$gt;"
+                 . T.replace "\"" "&quot;"
+                 . T.replace "'"  "&#039;"
+                 . T.replace "&"  "&amp;"
 

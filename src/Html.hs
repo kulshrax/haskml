@@ -10,7 +10,6 @@ module Html
     , fromNode
     , emptyElem
     , voidElem
-    , htmlSpecialChars
     ) where
 
 import qualified Data.Text as T
@@ -57,14 +56,3 @@ emptyElem t = Element t M.empty (InnerHtml mempty)
 
 voidElem :: TagName -> Node
 voidElem t = Element t M.empty Void
-
-
--- | Escape special characters from a Text string that have special
--- significance in HTML. Behaves similar to the htmlspecialchars()
--- function in PHP. Placed here so it is broadly available where needed.
-htmlSpecialChars :: T.Text -> T.Text
-htmlSpecialChars = T.replace "<"  "&lt;"
-                 . T.replace ">"  "$gt;"
-                 . T.replace "\"" "&quot;"
-                 . T.replace "'"  "&#039;"
-                 . T.replace "&"  "&amp;"
